@@ -1,0 +1,22 @@
+.title{
+  font-size:1.3rem;
+  color: #1e90ff;
+  padding: 0 0.5rem;
+}
+.context{
+  color:#777;
+  padding:.5rem;
+}
+.icon{
+  padding:.5rem 0;
+  color:#AAA;
+}
+.icon span{
+  display: inline-block;
+  padding: 0 10px;
+}
+.bread{
+  padding: .5rem;
+  border-bottom:1px solid #eee;
+  background-color: #e1f0ff;
+}

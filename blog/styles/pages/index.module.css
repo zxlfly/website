@@ -1,0 +1,17 @@
+.title{
+  font-size:1.3rem;
+  color: #1e90ff;
+  padding: 0 0.5rem;
+}
+.context{
+  color:#777;
+  padding:.5rem;
+}
+.icon{
+  padding:.5rem 0;
+  color:#AAA;
+}
+.icon span{
+  display: inline-block;
+  padding: 0 10px;
+}
