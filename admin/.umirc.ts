@@ -5,7 +5,15 @@ export default defineConfig({
     type: 'none',
   },
   routes: [
-    { path: '/', component: '@/pages/index' },
+    { exact: true, path: '/login', component: '@/pages/login' },
+    {
+      exact: false, path: '/', component: '@/layouts/index',
+      routes: [
+        { exact: true, path: '/', component: '@/pages/index' },
+        { exact: true, path: '/addArticle', component: '@/pages/addArticle' },
+        { exact: true, path: '/categoryList', component: '@/pages/categoryList' },
+      ]
+    },
   ],
   fastRefresh: {},
 });

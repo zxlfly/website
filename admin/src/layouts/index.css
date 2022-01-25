@@ -1,0 +1,18 @@
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  color: #fff;
+}
+.username{
+  margin-left: 14px;
+}
+.logo{
+  max-width: 200px;
+  max-height: 64px;
+  display: block;
+  margin:0 auto -4px;
+}
+.loginbtn{
+  cursor: pointer;
+}
