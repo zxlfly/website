@@ -7,13 +7,17 @@ export default defineConfig({
   routes: [
     { exact: true, path: '/login', component: '@/pages/login' },
     {
-      exact: false, path: '/', component: '@/layouts/index',
+      exact: false, path: '/', component: '@/layouts/index',wrappers: ['@/wrappers/auth',],
       routes: [
-        { exact: true, path: '/', component: '@/pages/index' },
-        { exact: true, path: '/addArticle', component: '@/pages/addArticle' },
+        { exact: true, path: '/', component: '@/pages/addArticle' },
+        { exact: true, path: '/articleList', component: '@/pages/articleList' },
         { exact: true, path: '/categoryList', component: '@/pages/categoryList' },
       ]
     },
   ],
   fastRefresh: {},
+  dva: {
+    immer: true,
+    hmr: false,
+  },
 });

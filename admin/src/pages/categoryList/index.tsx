@@ -6,27 +6,35 @@ import {
   PartitionOutlined,
   ToolOutlined,
 } from '@ant-design/icons';
-import { Header } from 'antd/lib/layout/layout';
-const count = 3;
-const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
+import Header from './components/Header';
 export default function IndexPage() {
 
-  const [initLoading, setInitLoading] = useState(true)
-  const [list, setList] = useState([])
+  const [initLoading, setInitLoading] = useState(false)
+  const [list, setList] = useState([
+    {
+      id:'1',
+      name:'name',
+      des:'des',
+      lv:1
+    },{
+      id:'2',
+      name:'name2',
+      des:'des2',
+      lv:2
+    },{
+      id:'3',
+      name:'name3',
+      des:'des3',
+      lv:3
+    }
+  ])
   useEffect(() => {
-    fetch(fakeDataUrl)
-      .then(res => res.json())
-      .then(res => {
-        setList(res.results)
-        setInitLoading(false)
-        console.log({
-          data: res.results,
-          list: res.results,
-
-        });
-      });
+    
   }, [])
-
+  function handleBtn(type:string){
+    console.log(type);
+    
+  }
   return (
     <>
       <Row align='middle' justify='space-between' className={styles.header}>
@@ -34,7 +42,7 @@ export default function IndexPage() {
           分类列表
         </div>
         <Button type='primary' size='large'>
-          添加分类
+          添加顶级分类
         </Button>
       </Row>
       <List
@@ -45,15 +53,22 @@ export default function IndexPage() {
         size={'large'}
         renderItem={item => (
           <List.Item
-            actions={[<a key="list-loadmore-edit">编辑</a>]}
+            actions={[
+              <Button onClick={()=>handleBtn('del')} type={'link'} danger key="list-loadmore-del">删除</Button>,
+              <Button onClick={()=>handleBtn('edit')} type={'link'} key="list-loadmore-edit">编辑</Button>,
+              <Button onClick={()=>handleBtn('add')} type={'link'} key="list-loadmore-add">添加次级分类</Button>,
+            ]}
           >
             <Skeleton avatar loading={initLoading} title={false} active>
               <List.Item.Meta
-                avatar={<Avatar src={item.picture.large} />}
-                title={<a href="https://ant.design">{item.name.last}</a>}
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                avatar={
+                  <Header name={item.name} lv={item.lv}>
+                    
+                  </Header>
+                }
+                title={<div>{item.name}</div>}
+                description={item.des}
               />
-              <div>content</div>
             </Skeleton>
           </List.Item>
         )}
