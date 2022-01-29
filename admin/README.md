@@ -22,7 +22,7 @@
   - 取数据直接结构即可，不需要单独写类型``({ User }: { User: UserModelState }) => ({User})``
 - ``dispatch``type记得加上命名空间
 - ``useSelector``获取数据同``connect``
-  - ``const userinfo = useSelector(({ User }: { User: UserModelState }) => ({User}))``
+  - ``const userinfo = useSelector(({ User }: { User: UserModelState }) => (User))``
 - ``mapDispatchToProps``用法
   - 需要单独给事件写类型，麻烦
   - 例子：login页面

@@ -71,14 +71,17 @@ const IndexPage: FC<Props> = (props) => {
 }
 export default connect(
   (state: ConnectState) => state.User,
-  dispatch => {
-    let creators = {
-      toLogin:(args: { payload: { userName: string; password: string; }; cb: (res: any) => void; }) => ({ type: "User/toLogin", ...args }),
-    };
-    creators = bindActionCreators(creators, dispatch);
-    return {
-      dispatch,
-      ...creators
-    };
+  {
+    toLogin:(args:any)=>({ type: "User/toLogin",...args})
   }
+  // dispatch => {
+  //   let creators = {
+  //     toLogin:(args: { payload: { userName: string; password: string; }; cb: (res: any) => void; }) => ({ type: "User/toLogin", ...args }),
+  //   };
+  //   creators = bindActionCreators(creators, dispatch);
+  //   return {
+  //     dispatch,
+  //     ...creators
+  //   };
+  // }
 )(IndexPage)

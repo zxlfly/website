@@ -1,6 +1,12 @@
-import { UserModelState, UserModelType } from "umi";
-let str = localStorage.getItem('userinfo')??''
-const userinfo:UserModelState | null = JSON.parse(str)
+import { UserModelState } from "umi";
+let str = localStorage.getItem('userinfo')??null
+let userinfo:UserModelState = {
+  login: false,
+  name: ""
+}
+if(str!==null){
+  userinfo = JSON.parse(str)
+}
 export const dva = {
   config: {
     onError(err: any) {
