@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { marked } from 'marked'
 import hljs from "highlightjs";
 import moment from 'moment';
@@ -7,10 +7,17 @@ import locale from 'antd/lib/locale/zh_CN';
 import 'highlightjs/styles/monokai_sublime.css';
 import './index.css'
 import { Row, Col, Input, Select, Button, DatePicker, ConfigProvider } from 'antd'
-
+import { connect, ConnectProps, UserModelState } from 'umi';
+interface AppProps extends ConnectProps {
+  User: UserModelState;
+}
 const { Option } = Select;
 const { TextArea } = Input
-function AddArticle() {
+const AddArticle:FC<AppProps>= props=> {
+  useEffect(()=>{
+    console.log(props);
+    
+  },[])
   const renderer = new marked.Renderer();
   marked.setOptions({
     renderer: renderer,
@@ -52,6 +59,7 @@ function AddArticle() {
 
   }
   const nowDate = '' + new Date().getFullYear() + (new Date().getMonth() + 1) + new Date().getDate()
+  
   return (
     <div style={{paddingTop:'20px'}}>
       <Row gutter={20}>
@@ -135,4 +143,6 @@ function AddArticle() {
     </div>
   )
 }
-export default AddArticle
+export default connect(
+  ({ User }: { User: UserModelState }) => ({User})
+)(AddArticle);

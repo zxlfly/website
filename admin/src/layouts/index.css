@@ -15,4 +15,9 @@
 }
 .loginbtn{
   cursor: pointer;
+  transition: all .2s;
+}
+.loginbtn:hover{
+  color: rgb(223, 59, 92);
+  text-decoration:underline;
 }

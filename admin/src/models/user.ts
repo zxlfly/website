@@ -1,10 +1,11 @@
-import { http, TOKEN_KEY } from '@/api/request';
+import {TOKEN_KEY } from '@/api/request';
 import login from '@/service/user';
 import { ApiRespone, UserInfo } from '@/types';
-import { Effect, getDvaApp, ImmerReducer, Reducer, Subscription } from 'umi';
+import { Effect, ImmerReducer, Subscription } from 'umi';
 
 export interface UserModelState {
   name: string;
+  login?: boolean;
 }
 
 export interface UserModelType {
@@ -24,7 +25,8 @@ const UserModel: UserModelType = {
   namespace: 'User',
 
   state: {
-    name: localStorage.getItem('userinfo') ?? ''
+    name: '',
+    login:false
   },
 
   effects: {
@@ -46,24 +48,18 @@ const UserModel: UserModelType = {
   reducers: {
     login(state, action) {
       state.name = action.payload.name;
-      localStorage.setItem('userinfo', action.payload.name)
+      state.login=true
+      localStorage.setItem('userinfo', JSON.stringify(state))
     },
     loginOut(state) {
       state.name = '';
+      state.login=false
       localStorage.removeItem(TOKEN_KEY)
       localStorage.removeItem('userinfo')
     }
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname }) => {
-        if (pathname !== '/login') {
-          // dispatch({
-          //   type: 'query',
-          // });
-        }
-      });
-    },
+    setup(){}
   },
 };
 

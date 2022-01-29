@@ -1,10 +1,13 @@
-import { ReactChild, ReactFragment, ReactPortal } from 'react';
-import { Redirect} from 'umi'
+import ConnectState from '@/types/connect';
+import { FC} from 'react';
+import { Redirect, useSelector} from 'umi'
 
-export default (props: { children: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; }) => {
-  if (localStorage.getItem('userinfo')) {
-    return <div>{ props.children }</div>;
+const IndexPage:FC = props =>{
+  const userinfo = useSelector((state:ConnectState) => state.User)
+  if (userinfo.login) {
+    return <div>{ props.children}</div>;
   } else {
     return <Redirect to="/login" />;
   }
 }
+export default IndexPage

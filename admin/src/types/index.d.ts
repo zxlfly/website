@@ -9,4 +9,3 @@ export type UserInfo = {
   name?: string,
   token?: string,
 }
-export type ModelsState = ReturnType<typeof getDvaApp>

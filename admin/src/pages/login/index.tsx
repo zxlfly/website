@@ -1,34 +1,33 @@
 import styles from './login.css';
-import  { useState } from 'react';
+import { FC, useState } from 'react';
 import 'antd/dist/antd.css';
-import { Card, Input, Button, Spin, notification, Alert } from 'antd';
+import { Card, Input, Button, Spin, message } from 'antd';
 import { KeyOutlined, UserOutlined } from '@ant-design/icons';
-import { useDispatch } from 'umi';
+import { connect, useDispatch } from 'umi';
 import { history } from 'umi';
-export default function IndexPage() {
+import { bindActionCreators } from 'redux';
+import ConnectState from '@/types/connect';
+import { RouteComponentProps } from 'dva/node_modules/@types/react-router-dom';
+type toLoginType =  (arg0: { payload: { userName: string; password: string; }; cb: (res: any) => void; }) => void
+interface Props extends RouteComponentProps {
+  toLogin:toLoginType
+}
+const IndexPage: FC<Props> = (props) => {
   const [userName, setUserName] = useState('zxlfly')
   const [password, setPassword] = useState('123456')
   const [isLoading, setIsLoading] = useState(false)
-  const dispatch = useDispatch();
-  const checkLogin = async() => {
+  const checkLogin = async () => {
     setIsLoading(true)
-    const cb = (res:any)=>{
-      if(res===true){
-        notification.open({
-          message: '登录成功',
-          description:<Alert style={{fontSize:'1rem'}} message="欢迎回来" type="success" />,
-        });
+    const cb = (res: any) => {
+      if (res === true) {
+        message.success('欢迎回来');
         history.push('/')
-      }else{
-        notification.open({
-          message: '登录失败',
-          description:<Alert style={{fontSize:'1rem'}} message={res} type="error" />,
-        });
+      } else {
+        message.error(res);
       }
       setIsLoading(false)
     }
-    dispatch({type:'User/toLogin',payload:{userName,password},cb})
-    
+    props.toLogin({ payload: { userName, password }, cb })
   }
   return (
     <div className={styles.login}>
@@ -70,3 +69,16 @@ export default function IndexPage() {
     </div>
   )
 }
+export default connect(
+  (state: ConnectState) => state.User,
+  dispatch => {
+    let creators = {
+      toLogin:(args: { payload: { userName: string; password: string; }; cb: (res: any) => void; }) => ({ type: "User/toLogin", ...args }),
+    };
+    creators = bindActionCreators(creators, dispatch);
+    return {
+      dispatch,
+      ...creators
+    };
+  }
+)(IndexPage)

@@ -3,23 +3,27 @@ import {
   ReadOutlined,
   PartitionOutlined,
 } from '@ant-design/icons';
-import { useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 import styles from './index.css'
-import { useDispatch, useSelector } from 'umi';
-import { ModelsState } from '@/types';
-export default function IndexPage(props: any) {
-  const dispatch = useDispatch()
-  const userinfo = useSelector((state:ModelsState) => state.User)
-  
+import { UserModelState, connect, ConnectProps, useSelector} from 'umi';
+// import ConnectState from '@/types/connect';
+interface AppProps extends ConnectProps {
+  User: UserModelState;
+}
+const IndexPage: FC<AppProps> = props => {
+  const userinfo = useSelector(({ User }: { User: UserModelState }) => ({User}))
+  useEffect(()=>{
+    console.log('userinfo',userinfo);
+  },[])
   const [collapsed, setCollapse] = useState(false)
   function itemClick(e:any){
     props.history.push(e.key)
   }
   function loginOut(){
-    dispatch({type:'User/toLoginOut'})
+    props.dispatch?.({type:'User/toLoginOut'})
     props.history.push('/login')
   }
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -63,7 +67,7 @@ export default function IndexPage(props: any) {
         <Header style={{color:'#fff'}}>
           <div className={styles.header}>
             <div className={styles.loginbtn} onClick={showModal}>退出登录</div>
-            <div className={styles.username}>欢迎回来：{userinfo.name}</div>
+            <div className={styles.username}>欢迎回来：{props.User.name}</div>
             <Modal title="警告" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
               <p>确定退出登录？</p>
             </Modal>
@@ -83,3 +87,6 @@ export default function IndexPage(props: any) {
     </Layout>
   );
 }
+export default connect(
+  ({ User }: { User: UserModelState }) => ({User})
+)(IndexPage);
