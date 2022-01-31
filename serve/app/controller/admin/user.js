@@ -19,7 +19,7 @@ class UserController extends BaseController {
         pwd:password
       } 
     });
-    console.log(user);
+    // console.log(user);
     if (!user) {
       return this.error('用户名或密码错误');
     }

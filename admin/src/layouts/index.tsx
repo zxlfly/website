@@ -15,8 +15,12 @@ interface AppProps extends ConnectProps {
 }
 const IndexPage: FC<AppProps> = props => {
   const userinfo = useSelector(({ User }: { User: UserModelState }) => ({User}))
+  let refkey = props.location.pathname
+  if(props.location.pathname.startsWith('/handleCategory')){
+    refkey = '/categoryList'
+  }
   useEffect(()=>{
-    console.log('userinfo',userinfo);
+    // console.log('userinfo',props.location.pathname);
   },[])
   const [collapsed, setCollapse] = useState(false)
   function itemClick(e:any){
@@ -44,7 +48,7 @@ const IndexPage: FC<AppProps> = props => {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapse}>
         <img className={styles.logo} src={require("../../public/img/logoko-w.png")} alt="" />
-        <Menu onSelect={itemClick} theme="dark" defaultSelectedKeys={['/addArticle']} mode="inline">
+        <Menu onSelect={itemClick} theme="dark" defaultSelectedKeys={[refkey]} mode="inline">
           <Menu.Item title='添加文章' key="/" icon={<ReadOutlined />}>
             添加文章
           </Menu.Item>

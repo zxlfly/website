@@ -9,9 +9,9 @@ class BaseController extends Controller {
       message: message ?? '操作成功'
     };
   }
-  async error(message) {
+  async error(message,code=0) {
     this.ctx.body = {
-      code: 0,
+      code,
       data:{},
       message: message ?? '操作失败!',
     };

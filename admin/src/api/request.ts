@@ -11,11 +11,14 @@ const service = axios.create({
 service.interceptors.request.use((config:AxiosRequestConfig) => {
         // 请求加token
         const token = window.localStorage.getItem(TOKEN_KEY)
+        // console.log('token:',token);
+        // console.log('config.url:',config.url);
+        // console.log(config.url!=='login');
         // 设置url白名单
-        if (token&&config.url!==apiurl+'login') {
-            // config.headers.common['Authorization'] = 'Bearer ' + token
-            (config.headers as AxiosRequestHeaders).authorization = localStorage.getItem('token') as string
+        if (token&&config.url!=='login') {
+            (config.headers as AxiosRequestHeaders).authorization = 'Bearer ' + token
         }
+        // console.log('config',config);
         return config
     },
     err => {
@@ -26,11 +29,9 @@ service.interceptors.request.use((config:AxiosRequestConfig) => {
 service.interceptors.response.use(
     async (response:AxiosResponse) => {
         let { data, config } = response
-        // console.log('响应拦截',response)
         // 写token
-        // 也可以卸载login的逻辑李
         if (data.code === 200) {
-            if (config.url === apiurl+'login') {
+            if (config.url === 'login') {
                 localStorage.setItem(TOKEN_KEY, data.data.token)
             }
         } else if (data.code === -1) {

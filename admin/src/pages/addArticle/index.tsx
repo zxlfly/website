@@ -6,8 +6,10 @@ import 'moment/locale/zh-cn';
 import locale from 'antd/lib/locale/zh_CN';
 import 'highlightjs/styles/monokai_sublime.css';
 import './index.css'
-import { Row, Col, Input, Select, Button, DatePicker, ConfigProvider } from 'antd'
+import { Row, Col, Input, Select, Button, DatePicker, ConfigProvider, message } from 'antd'
 import { connect, ConnectProps, UserModelState } from 'umi';
+import { CategoryList } from '@/types';
+import category from '@/service/category';
 interface AppProps extends ConnectProps {
   User: UserModelState;
 }
@@ -15,7 +17,7 @@ const { Option } = Select;
 const { TextArea } = Input
 const AddArticle:FC<AppProps>= props=> {
   useEffect(()=>{
-    console.log(props);
+    // console.log(props);
     
   },[])
   const renderer = new marked.Renderer();
@@ -37,10 +39,9 @@ const AddArticle:FC<AppProps>= props=> {
   const [markdownContent, setMarkdownContent] = useState('') //html内容
   const [introducemd, setIntroducemd] = useState('')            //简介的markdown内容
   const [introducehtml, setIntroducehtml] = useState('') //简介的html内容
-  const [showDate, setShowDate] = useState()   //发布日期
-  const [typeInfo, setTypeInfo] = useState([]) // 文章类别信息
-  const [selectedType, setSelectType] = useState(1) //选择的文章类别
-
+  const [selectedType, setSelectType] = useState<number>(-1) //选择的文章类别
+  
+  const [list, setList] = useState<CategoryList[]>([])
   function leftMdChange(val: string) {
     if (val === articleContent) {
       return
@@ -55,11 +56,46 @@ const AddArticle:FC<AppProps>= props=> {
     setIntroducemd(val)
     setIntroducehtml(marked(val))
   }
-  function chooseDate() {
-
+  function selectType(e: number) {
+    console.log(e);
+    setSelectType(e)
   }
   const nowDate = '' + new Date().getFullYear() + (new Date().getMonth() + 1) + new Date().getDate()
-  
+  async function getList() {
+    function getChildren(root:CategoryList,arr:CategoryList[],dep:number) {
+      if(!root.child.length){
+        return
+      }
+      root.child.forEach((item:CategoryList)=>{
+        item.lv=dep
+        arr.push(item)
+        getChildren(item,arr,dep+1)
+      })
+    }
+    let res = await category.getCategoryList()
+    if(res.code===200){
+      let arr: CategoryList[] = []
+      res.data.list.forEach((item:CategoryList)=>{
+        item.lv=1
+        arr.push(item)
+        getChildren(item,arr,2)
+      })
+      setList(arr)
+      console.log('list:',arr);
+    }else{
+      message.error(res.message)
+    }
+  }
+  useEffect(() => {
+    getList()
+  }, [])
+  function submit(){
+    console.log(articleTitle);
+    console.log(articleContent);
+    console.log(introducemd);
+    console.log(selectedType);
+    
+  }
   return (
     <div style={{paddingTop:'20px'}}>
       <Row gutter={20}>
@@ -67,6 +103,7 @@ const AddArticle:FC<AppProps>= props=> {
           <Row gutter={10} >
             <Col span={20}>
               <Input
+                className={articleTitle.length>0?'':'bitian'}
                 placeholder="文章标题"
                 size="large"
                 value={articleTitle}
@@ -74,8 +111,19 @@ const AddArticle:FC<AppProps>= props=> {
               />
             </Col>
             <Col span={4}>
-              <Select style={{width:'100%'}} defaultValue="Sign Up" size="large">
-                <Option value="Sign Up">选择分类</Option>
+              <Select 
+                style={{width:'100%'}} 
+                size="large"
+                placeholder='选择分类'
+                onSelect={selectType}
+              >
+                {
+                  list.map((item)=>{
+                    return (
+                      <Option key={item.id} value={item.id}>{item.name}</Option>
+                    )
+                  })
+                }
               </Select>
             </Col>
           </Row>
@@ -83,7 +131,7 @@ const AddArticle:FC<AppProps>= props=> {
           <Row gutter={10} >
             <Col span={12}>
               <TextArea
-                className="markdown-content"
+                className={articleContent.length>0?'markdown-content':'bitian markdown-content'}
                 rows={35}
                 placeholder="文章内容"
                 value={articleContent}
@@ -105,8 +153,8 @@ const AddArticle:FC<AppProps>= props=> {
 
         <Col span={6}>
           <Row justify='space-between'>
-            <Button style={{ width: '45%' }} size="large">暂存文章</Button>&nbsp;
-            <Button style={{ width: '45%' }} type="primary" size="large" onClick={() => { }}>发布文章</Button>
+            <Button style={{ width: '45%' }} size="large">暂存文章</Button>
+            <Button style={{ width: '45%' }} type="primary" size="large" onClick={submit}>发布文章</Button>
           </Row>
           <Row>
             <Col span={24}>
@@ -115,6 +163,7 @@ const AddArticle:FC<AppProps>= props=> {
                 rows={4}
                 placeholder="文章简介"
                 value={introducemd}
+                className={introducemd.length>0?'markdown-content':'bitian markdown-content'}
                 onChange={e => rightMdChange(e.target.value)}
               />
               <div
@@ -122,20 +171,6 @@ const AddArticle:FC<AppProps>= props=> {
                 dangerouslySetInnerHTML={{ __html: introducehtml }}
               ></div>
             </Col>
-          </Row>
-          <Row>
-            <div className="date-select">
-              <ConfigProvider locale={locale}>
-                <DatePicker
-                  className='addDatePicker'
-                  defaultValue={moment(nowDate, 'YYYY-MM-DD')}
-                  placeholder="发布日期"
-                  size="large"
-                  value={showDate}
-                  onChange={chooseDate}
-                />
-              </ConfigProvider>
-            </div>
           </Row>
 
         </Col>
