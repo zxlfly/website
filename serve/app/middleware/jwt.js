@@ -5,7 +5,7 @@ module.exports = ({ app }) => {
   return async function verify(ctx, next) {
     if (!ctx.request.header.authorization) {
       ctx.body = {
-        code: -1,
+        code: -5,
         message: '请登录',
       };
       return;
@@ -18,7 +18,7 @@ module.exports = ({ app }) => {
           await next();
         } else {
           ctx.body = {
-            code: -1,
+            code: -5,
             message: 'token信息错误',
           };
         }
@@ -26,12 +26,12 @@ module.exports = ({ app }) => {
         console.log(err);
         if (err.name === 'TokenExpiredError') {
           ctx.body = {
-            code: -1,
+            code: -5,
             message: '登录已过期',
           };
         } else {
           ctx.body = {
-            code: -1,
+            code: -5,
             message: '用户信息错误',
           };
         }
@@ -39,7 +39,7 @@ module.exports = ({ app }) => {
       }
     } else {
       ctx.body = {
-        code: -1,
+        code: -5,
         message: 'token信息错误',
       };
     }

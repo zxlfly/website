@@ -8,7 +8,7 @@ module.exports = app => {
   router.get('/admin/article', jwt,controller.admin.article.index);
   router.post('/admin/article/add',jwt, controller.admin.article.add);
   router.get('/admin/article/getCache',jwt, controller.admin.article.getCache);
-  router.post('/admin/article/cache', jwt,controller.admin.article.cache);
+  router.post('/admin/article/addCache', jwt,controller.admin.article.addCache);
   router.post('/admin/article/delCache', jwt,controller.admin.article.delCache);
   // 分类
   router.get('/admin/category',jwt, controller.admin.category.index);

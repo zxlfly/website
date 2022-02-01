@@ -34,7 +34,7 @@ service.interceptors.response.use(
             if (config.url === 'login') {
                 localStorage.setItem(TOKEN_KEY, data.data.token)
             }
-        } else if (data.code === -1) {
+        } else if (data.code === -5) {
             localStorage.removeItem(TOKEN_KEY)
             history.push('/login');
         }

@@ -25,3 +25,18 @@ export interface HandleCategory{
   id?:string
   des?:string
 }
+export interface ArticleInfo{
+  id:number,
+  pid:number,
+  title:string,
+  introduction:string,
+  content:string
+}
+export interface ArticleList{
+  list:Array<ArticleInfo>,
+  message:string
+}
+export interface ArticleCatche{
+  data:ArticleInfo,
+  message:string
+}
