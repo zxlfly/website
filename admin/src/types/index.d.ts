@@ -34,6 +34,7 @@ export interface ArticleInfo{
 }
 export interface ArticleList{
   list:Array<ArticleInfo>,
+  count:number,
   message:string
 }
 export interface ArticleCatche{

@@ -4,12 +4,11 @@ import hljs from "highlightjs";
 import 'moment/locale/zh-cn';
 import 'highlightjs/styles/monokai_sublime.css';
 import './index.css'
-import { Row, Col, Input, Select, Button, DatePicker, ConfigProvider, message, Spin } from 'antd'
-import { connect, ConnectProps, UserModelState } from 'umi';
+import { Row, Col, Input, Select, Button, DatePicker, ConfigProvider, message, Spin, Breadcrumb } from 'antd'
+import { connect, ConnectProps, useParams, UserModelState } from 'umi';
 import { ApiRespone, ArticleCatche, ArticleList, CategoryList } from '@/types';
 import category from '@/service/category';
 import article from '@/service/article';
-import { useParams } from 'umi/node_modules/@types/react-router';
 interface AppProps extends ConnectProps {
   User: UserModelState;
 }
@@ -19,11 +18,7 @@ interface paramsType {
 const { Option } = Select;
 const { TextArea } = Input
 const AddArticle: FC<AppProps> = props => {
-  // const params: paramsType = useParams();
-  useEffect(()=>{
-    // console.log(history);
-    
-  })
+  const params: paramsType = useParams();
   const renderer = new marked.Renderer();
   marked.setOptions({
     renderer: renderer,
@@ -37,15 +32,15 @@ const AddArticle: FC<AppProps> = props => {
       return hljs.highlightAuto(code).value;
     }
   });
-  const [isLoading,setIsLoading]=useState(false)
-  const [articleId, setArticleId] = useState(-1)  //字段名起的不好也懒得换了 缓存文章的ID，如果是-1说明不存在缓存
+  const [isLoading, setIsLoading] = useState(false)
+  const [articleId, setArticleId] = useState<number | string>(params.data ?? -1) //文章id，-1标识不是编辑文章
+  const [cacheId, setCacheId] = useState(-1)  //缓存文章的ID，如果是-1说明不存在缓存
   const [articleTitle, setArticleTitle] = useState('')   //文章标题
   const [articleContent, setArticleContent] = useState('')  //markdown的编辑内容
   const [markdownContent, setMarkdownContent] = useState('') //html内容
   const [introducemd, setIntroducemd] = useState('')            //简介的markdown内容
   const [introducehtml, setIntroducehtml] = useState('') //简介的html内容
   const [selectedType, setSelectType] = useState<number>(-1) //选择的文章类别
-  
   const [list, setList] = useState<CategoryList[]>([])
   function leftMdChange(val: string) {
     if (val === articleContent) {
@@ -62,7 +57,7 @@ const AddArticle: FC<AppProps> = props => {
     setIntroducehtml(marked(val))
   }
   function selectType(e: number) {
-    // console.log(e);
+    console.log(e);
     setSelectType(e)
   }
   const nowDate = '' + new Date().getFullYear() + (new Date().getMonth() + 1) + new Date().getDate()
@@ -92,7 +87,7 @@ const AddArticle: FC<AppProps> = props => {
     }
   }
 
-  async function submit(type:string) {
+  async function submit(type: string) {
     if (!articleTitle.length) {
       return message.warning('请输入标题')
     } else if (!articleContent.length) {
@@ -102,18 +97,32 @@ const AddArticle: FC<AppProps> = props => {
     } else if (selectedType == -1) {
       return message.warning('请选择类型')
     }
-    if(type=='catch'){
+    if (type == 'catch') {
       catcharticle()
-    }else if(type=='add'){
+    } else if (type == 'add') {
       add()
+    } else if (type == 'edit') {
+      edit()
+    }
+  }
+  async function edit() {
+    setIsLoading(true)
+    let res: ApiRespone<ArticleCatche> = await article.editArticle(Number(articleId), selectedType, articleTitle, introducemd, articleContent)
+    setIsLoading(false)
+    // console.log('res:',res);
+    if (res.code === 200) {
+      message.success('编辑成功')
+      props.history.goBack()
+    } else {
+      message.error(res.message)
     }
   }
   async function add() {
     setIsLoading(true)
-    let res:ApiRespone<ArticleList> = await article.addArticle(articleId,selectedType,articleTitle,introducemd,articleContent)
+    let res: ApiRespone<ArticleList> = await article.addArticle(Number(articleId), selectedType, articleTitle, introducemd, articleContent)
     setIsLoading(false)
     // console.log('res:',res);
-    if(res.code===200){
+    if (res.code === 200) {
       message.success('添加成功')
       setArticleId(-1)
       setArticleTitle('')
@@ -122,48 +131,85 @@ const AddArticle: FC<AppProps> = props => {
       setSelectType(-1)
       setMarkdownContent('')
       setIntroducehtml('')
-    }else{
+    } else {
       message.error(res.message)
     }
   }
   async function catcharticle() {
     setIsLoading(true)
-    let res:ApiRespone<ArticleCatche> = await article.addCatcheArticle(articleId,selectedType,articleTitle,introducemd,articleContent)
+    let res: ApiRespone<ArticleCatche> = await article.addCatcheArticle(cacheId, selectedType, articleTitle, introducemd, articleContent)
     setIsLoading(false)
-    // console.log('res:',res);
-    if(res.code===200){
+    console.log('res:', res);
+    if (res.code === 200) {
       message.success('缓存成功')
-    }else{
+    } else {
       message.error(res.message)
     }
   }
-  async function getCatchData(){
+  async function getCatchData() {
     setIsLoading(true)
     let res = await article.getCatcheArticle()
     // console.log(res);
     setIsLoading(false)
-    if(res.code===200){
-      if(res.data.id==-1){
+    if (res.code === 200) {
+      if (res.data.id == -1) {
         message.success('暂无缓存')
-      }else{
+      } else {
         message.success(res.message)
-        setArticleId(res.data.id)
+        setCacheId(res.data.id)
         setArticleTitle(res.data.title)
         setArticleContent(res.data.content)
         setIntroducemd(res.data.introduction)
         setSelectType(res.data.pid)
       }
-    }else{
+    } else {
       message.warn(res.message)
+    }
+  }
+  async function getArticle() {
+    setIsLoading(true)
+    let res = await article.getArticle(Number(articleId))
+    console.log(res);
+    setIsLoading(false)
+    if (res.code === 200) {
+      if (res.data.id == -1) {
+        // message.success('暂无缓存')
+      } else {
+        message.success(res.message)
+        setArticleTitle(res.data.title)
+        setArticleContent(res.data.content)
+        setIntroducemd(res.data.introduction)
+        setSelectType(res.data.pid)
+      }
+    } else {
+      message.warn(res.message)
+    }
+  }
+  function getData() {
+    if (articleId !== -1) {
+      getArticle()
+    } else {
+      getCatchData()
     }
   }
   useEffect(() => {
     getList()
-    getCatchData()
+    getData()
   }, [])
   return (
     <Spin tip="Loading..." spinning={isLoading}>
       <div style={{ paddingTop: '20px' }}>
+        {
+          articleId !== -1 ?
+            <Breadcrumb style={{ paddingBottom: '20px' }}>
+              <Breadcrumb.Item onClick={() => { props.history.goBack() }}>
+                <a>文章列表</a>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                编辑文章
+              </Breadcrumb.Item>
+            </Breadcrumb> : null
+        }
         <Row gutter={20}>
           <Col span={18}>
             <Row gutter={10} >
@@ -182,7 +228,7 @@ const AddArticle: FC<AppProps> = props => {
                   size="large"
                   placeholder='选择分类'
                   onSelect={selectType}
-                  value={selectedType==-1?null:selectedType}
+                  value={selectedType == -1 ? null : selectedType}
                 >
                   {
                     list.map((item) => {
@@ -220,8 +266,14 @@ const AddArticle: FC<AppProps> = props => {
 
           <Col span={6}>
             <Row justify='space-between'>
-              <Button style={{ width: '45%' }} size="large" onClick={()=>submit('catch')}>暂存文章</Button>
-              <Button style={{ width: '45%' }} type="primary" size="large" onClick={()=>submit('add')}>发布文章</Button>
+              {
+                articleId == -1 ?
+                  <>
+                    <Button style={{ minWidth: '45%', height: '40px' }} type="primary" onClick={() => submit('catch')}>暂存文章</Button>
+                    <Button style={{ minWidth: '45%', height: '40px' }} type="primary" onClick={() => submit('add')}>发布文章</Button>
+                  </> :
+                  <Button style={{ width: '100%', height: '40px' }} type="primary" onClick={() => submit('edit')}>确定修改</Button>
+              }
             </Row>
             <Row>
               <Col span={24}>

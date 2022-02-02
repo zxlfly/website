@@ -67,7 +67,7 @@ const IndexPage:FC<AppProps>=props=>{
         getChildren(item,arr,2)
       })
       setList(arr)
-      console.log('list:',arr);
+      // console.log('list:',arr);
     }else{
       message.error(res.message)
     }
@@ -77,17 +77,17 @@ const IndexPage:FC<AppProps>=props=>{
     getList()
   }, [])
   function handleDel(id:number,name:string){
-    console.log(id);
+    // console.log(id);
     setIsModalVisible(true);
     setChooseitem({id,name})
   }
   function handleCategory(args:handleProps) {
-    console.log('args',args);
+    // console.log('args',args);
     props.history.push('/handleCategory/'+JSON.stringify(args))
   }
   return (
     <Spin tip="Loading..." spinning={initLoading}>
-      <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="警告" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <p>{chooseItem.name}</p>
       </Modal>
       <Row align='middle' justify='space-between' className={styles.header}>

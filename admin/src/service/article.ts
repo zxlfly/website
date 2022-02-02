@@ -1,9 +1,14 @@
 import { http } from "@/api/request";
 import { ArticleCatche, ApiRespone, ArticleList, ArticleInfo } from "@/types";
 
-async function getArticleList(): Promise<ApiRespone<ArticleList>> {
+async function getArticleList(page:number,size:number): Promise<ApiRespone<ArticleList>> {
   return new Promise((resolve, reject) => {
-    http.get<ApiRespone<ArticleList>>('article',)
+    http.get<ApiRespone<ArticleList>>('article',{
+      params:{
+        page,
+        size
+      }
+    })
       .then(function (data) {
         return resolve(data.data);
       })
@@ -32,35 +37,48 @@ async function addArticle(articleId:number,pid:number,title: string,introduction
       });
   });
 }
-async function editArticle(name: string, id: string, des: string): Promise<ApiRespone<ArticleList>> {
+async function getArticle(id: number): Promise<ApiRespone<ArticleInfo>> {
   return new Promise((resolve, reject) => {
-    http.post<ApiRespone<ArticleList>>('article/edit', {
-      name,
-      id,
-      des
+    http.get<ApiRespone<ArticleInfo>>('article/getArticle', {
+      params:{
+        id
+      }
     })
       .then(function (data) {
-        console.log('qq:', data.data);
         return resolve(data.data);
       })
       .catch(function (error) {
         console.log(error);
-        return reject({ message: '更新失败' })
+        return reject({ message: '获取失文章失败' })
       });
   });
 }
-async function delArticle(id: number): Promise<ApiRespone<ArticleList>> {
+
+async function editArticle(id: number,pid:number,title: string,introduction: string,
+  content: string,):Promise<ApiRespone<ArticleCatche>> {
+    return new Promise((resolve, reject) => {
+      http.post<ApiRespone<ArticleCatche>>('article/editArticle', {
+        id,pid,title,introduction,content
+      })
+        .then((e) => {
+          resolve(e.data)
+          
+        }).catch((err) => {
+          reject({message:'编辑失败'})
+        })
+    })
+  }
+async function delArticle(id: number): Promise<ApiRespone<ArticleInfo>> {
   return new Promise((resolve, reject) => {
-    http.post<ApiRespone<ArticleList>>('article/del', {
+    http.post<ApiRespone<ArticleInfo>>('article/delArticle', {
       id
     })
       .then(function (data) {
-        console.log('qq:', data.data);
         return resolve(data.data);
       })
       .catch(function (error) {
         console.log(error);
-        return reject({ message: '删除失败' })
+        return reject({ message: '删除文章失败' })
       });
   });
 }
@@ -97,4 +115,5 @@ export default {
   delArticle,
   addCatcheArticle,
   getCatcheArticle,
+  getArticle,
 }
