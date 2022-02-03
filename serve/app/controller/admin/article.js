@@ -17,6 +17,7 @@ class ArticleController extends BaseController {
       // Project.findAll({ offset: 5, limit: 5 });
       // 返回总的页数
       let params = {
+        order: [[ 'updated_at', 'DESC' ]],
         offset,
         limit: size,
       }
@@ -39,11 +40,11 @@ class ArticleController extends BaseController {
   }
   async add() {
     const { ctx, app } = this;
-    const { articleId, pid, title, introduction, content } = ctx.request.body;
+    const { articleId, pid, title, introduction, content,sort } = ctx.request.body;
     console.log(ctx.request.body);
     try {
       const ret = await ctx.model.Article.create({
-        pid, title, introduction, content
+        pid, title, introduction, content,sort
       })
       if (ret) {
         if (articleId != -1) {
@@ -83,14 +84,14 @@ class ArticleController extends BaseController {
   }
   async editArticle() {
     const { ctx, app } = this;
-    const { id ,pid, title, introduction, content} = ctx.request.body;
+    const { id ,pid, title, introduction, content,sort} = ctx.request.body;
     console.log(ctx.request.body);
     // return this.error({}, '编辑失败')
     const ret = await ctx.model.Article.findByPk(id);
     try{
       if (ret) {
         const ret = await ctx.model.Article.update(
-          { pid, title, introduction, content, },
+          { pid, title, introduction, content, sort},
           {
             where: {
               id

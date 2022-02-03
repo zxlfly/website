@@ -19,14 +19,15 @@ async function getArticleList(page:number,size:number): Promise<ApiRespone<Artic
   });
 }
 async function addArticle(articleId:number,pid:number,title: string,introduction: string,
-  content: string,): Promise<ApiRespone<ArticleList>> {
+  content: string,sort:number): Promise<ApiRespone<ArticleList>> {
   return new Promise((resolve, reject) => {
     http.post<ApiRespone<ArticleList>>('article/add', {
       articleId,
       pid,
       title,
       introduction,
-      content
+      content,
+      sort
     })
       .then(function (data) {
         return resolve(data.data);
@@ -55,10 +56,10 @@ async function getArticle(id: number): Promise<ApiRespone<ArticleInfo>> {
 }
 
 async function editArticle(id: number,pid:number,title: string,introduction: string,
-  content: string,):Promise<ApiRespone<ArticleCatche>> {
+  content: string,sort:number):Promise<ApiRespone<ArticleCatche>> {
     return new Promise((resolve, reject) => {
       http.post<ApiRespone<ArticleCatche>>('article/editArticle', {
-        id,pid,title,introduction,content
+        id,pid,title,introduction,content,sort
       })
         .then((e) => {
           resolve(e.data)

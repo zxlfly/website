@@ -46,7 +46,7 @@ const AddArticle: FC<AppProps> = props => {
   const [introducemd, setIntroducemd] = useState('')            //简介的markdown内容
   const [introducehtml, setIntroducehtml] = useState('') //简介的html内容
   const [selectedType, setSelectType] = useState<number>(-1) //选择的文章类别
-  
+  const [sort,setSort] = useState(99)
   function leftMdChange(val: string) {
     if (val === articleContent) {
       return
@@ -87,7 +87,7 @@ const AddArticle: FC<AppProps> = props => {
   }
   async function edit() {
     setIsLoading(true)
-    let res: ApiRespone<ArticleCatche> = await article.editArticle(Number(articleId), selectedType, articleTitle, introducemd, articleContent)
+    let res: ApiRespone<ArticleCatche> = await article.editArticle(Number(articleId), selectedType, articleTitle, introducemd, articleContent,sort)
     setIsLoading(false)
     // console.log('res:',res);
     if (res.code === 200) {
@@ -99,7 +99,7 @@ const AddArticle: FC<AppProps> = props => {
   }
   async function add() {
     setIsLoading(true)
-    let res: ApiRespone<ArticleList> = await article.addArticle(Number(articleId), selectedType, articleTitle, introducemd, articleContent)
+    let res: ApiRespone<ArticleList> = await article.addArticle(Number(articleId), selectedType, articleTitle, introducemd, articleContent,sort)
     setIsLoading(false)
     // console.log('res:',res);
     if (res.code === 200) {
@@ -192,13 +192,22 @@ const AddArticle: FC<AppProps> = props => {
         <Row gutter={20}>
           <Col span={18}>
             <Row gutter={10} >
-              <Col span={20}>
+              <Col span={16}>
                 <Input
                   className={articleTitle.length > 0 ? '' : 'bitian'}
                   placeholder="文章标题"
                   size="large"
                   value={articleTitle}
                   onChange={(e) => setArticleTitle(e.target.value.trim())}
+                />
+              </Col>
+              <Col span={4}>
+                <Input
+                  placeholder="排序"
+                  size="large"
+                  value={sort}
+                  type={'number'}
+                  onChange={(e) => setSort(Number(e.target.value.trim()))}
                 />
               </Col>
               <Col span={4}>
