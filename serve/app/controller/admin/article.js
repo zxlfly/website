@@ -1,11 +1,12 @@
 'use strict';
 const BaseController = require('./base');
+const {Op} = require('sequelize')
 class ArticleController extends BaseController {
   async index() {
     const { ctx, app } = this;
-    console.log(ctx.query);
+    console.log(ctx.request.body);
     try {
-      let {id, page, size } = ctx.query
+      let {page, size ,keywords,searchDate,selectedType} = ctx.request.body
       page = Number(page)
       size = Number(size)
       if (page < 1 || size < 0) {
@@ -13,21 +14,33 @@ class ArticleController extends BaseController {
       }
       // 计算需要跳过多少条
       const offset = (page - 1) * size
-      // 跳过5个实例,然后获取5个实例
-      // Project.findAll({ offset: 5, limit: 5 });
-      // 返回总的页数
-      let params = {
+      let selectedTypeObj = {}
+      // 根据分类查询
+      if(selectedType!=-1){
+        selectedTypeObj={
+          pid:selectedType
+        }
+      }
+      // 根基关键词模糊匹配
+      let keywordsobj={}
+      if(keywords!=''){
+        keywordsobj = { title: { [Op.like]: `%${keywords}%` } }
+      }
+      // 根据时间段匹配
+      let serachDateObj
+      if(searchDate[0]!=''&&searchDate[1]!=''){
+        console.log(333);
+      }
+      const { count, rows } = await ctx.model.Article.findAndCountAll({
         order: [[ 'updated_at', 'DESC' ]],
         offset,
         limit: size,
-      }
-      if(id){
-        params['where']={
-          id
+        where:{
+          ...selectedTypeObj,
+          ...keywordsobj
         }
-      }
-      const { count, rows } = await ctx.model.Article.findAndCountAll(params);
-      console.log(count, rows)
+      });
+      // console.log(count, rows)
       if (rows) {
         this.success({ list: rows, count });
       } else {

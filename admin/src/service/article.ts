@@ -1,13 +1,14 @@
 import { http } from "@/api/request";
 import { ArticleCatche, ApiRespone, ArticleList, ArticleInfo } from "@/types";
 
-async function getArticleList(page:number,size:number): Promise<ApiRespone<ArticleList>> {
+async function getArticleList(page:number,size:number,keywords?:string,searchDate?:[string,string],selectedType?:number): Promise<ApiRespone<ArticleList>> {
   return new Promise((resolve, reject) => {
-    http.get<ApiRespone<ArticleList>>('article',{
-      params:{
-        page,
-        size
-      }
+    http.post<ApiRespone<ArticleList>>('article',{
+      page,
+      size,
+      keywords,
+      searchDate,
+      selectedType
     })
       .then(function (data) {
         return resolve(data.data);

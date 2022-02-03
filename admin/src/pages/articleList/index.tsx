@@ -22,6 +22,7 @@ const ArticleList: FC<AppProps> = props => {
   const [total, setTotal] = useState(1)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [keywords,setKeywords] = useState('')
+  const [searchDate,setSearchDate]=useState<[string,string]>(['',''])
   const [chooseItem, setChooseitem] = useState<ArticleInfo>({
     id: -1,
     pid: -1,
@@ -37,7 +38,7 @@ const ArticleList: FC<AppProps> = props => {
     setIsLoading(false)
     if (res.code === 200) {
       message.success('已删除：' + chooseItem.title)
-      getList(page, size)
+      getList(page, size,keywords,searchDate,selectedType)
     } else {
       message.error(res.message)
     }
@@ -45,9 +46,9 @@ const ArticleList: FC<AppProps> = props => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  const getList = async (page: number, size: number) => {
+  const getList = async (page: number, size: number,keywords?:string,searchDate?:[string,string],selectedType?:number) => {
     setIsLoading(true)
-    let res = await article.getArticleList(page, size)
+    let res = await article.getArticleList(page, size,keywords,searchDate,selectedType)
     // console.log('res:',res);
     setIsLoading(false)
     if (res.code === 200) {
@@ -61,10 +62,11 @@ const ArticleList: FC<AppProps> = props => {
     if (pageSize !== size) {
       setSize(pageSize)
     }
-    console.log(Math.ceil(total / pageSize), pageNumber);
-    // if(Math.ceil(total/pageSize)<pageNumber)return
-    setPage(pageNumber)
-    getList(pageNumber, pageSize)
+    if(pageNumber!=page){
+      setPage(pageNumber)
+    }
+    console.log(pageNumber,pageSize);
+    getList(pageNumber,pageSize,keywords,searchDate,selectedType)
   }
   const handleDel = (item: ArticleInfo) => {
     setChooseitem(item)
@@ -75,23 +77,26 @@ const ArticleList: FC<AppProps> = props => {
       pathname: '/handleArticle/' + id,
     });
   }
-
   // antd ts支持bug 官方demo报错 暂时使用any
   function selectDate(values: any, formatString: [string, string]) {
     console.log(typeof values, values);
     console.log(formatString);
-
+    setSearchDate(formatString)
   }
   async function search(){
     console.log('search');
-    
+    console.log(keywords);
+    console.log(searchDate);
+    console.log(selectedType);
+    setPage(1)
+    getList(page,size,keywords,searchDate,selectedType)
   }
   function selectType(e: number) {
-    console.log(e);
+    // console.log(e);
     setSelectType(e)
   }
   useEffect(() => {
-    getList(page, size)
+    getList(page,size,keywords,searchDate,selectedType)
   }, [])
   return (
     <>

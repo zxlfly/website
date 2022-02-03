@@ -5,7 +5,7 @@ module.exports = app => {
   // 用户
   router.post('/admin/login', controller.admin.user.login);
   // 文章
-  router.get('/admin/article', jwt,controller.admin.article.index);
+  router.post('/admin/article', jwt,controller.admin.article.index);
   router.post('/admin/article/add',jwt, controller.admin.article.add);
   router.get('/admin/article/getArticle',jwt, controller.admin.article.getArticle);
   router.post('/admin/article/editArticle',jwt, controller.admin.article.editArticle);
