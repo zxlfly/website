@@ -5,12 +5,16 @@ import 'moment/locale/zh-cn';
 import 'highlightjs/styles/monokai_sublime.css';
 import './index.css'
 import { Row, Col, Input, Select, Button, DatePicker, ConfigProvider, message, Spin, Breadcrumb } from 'antd'
-import { connect, ConnectProps, useParams, UserModelState } from 'umi';
+import { connect, ConnectProps, useDispatch, useParams, UserModelState } from 'umi';
 import { ApiRespone, ArticleCatche, ArticleList, CategoryList } from '@/types';
 import category from '@/service/category';
 import article from '@/service/article';
+import Item from 'antd/lib/list/Item';
+import { CategoryModelState } from '@/models/category';
+import CategorySelect from '@/components/categorySelect'
 interface AppProps extends ConnectProps {
   User: UserModelState;
+  Category:CategoryModelState
 }
 interface paramsType {
   data: string
@@ -18,6 +22,7 @@ interface paramsType {
 const { Option } = Select;
 const { TextArea } = Input
 const AddArticle: FC<AppProps> = props => {
+  const dispatch = useDispatch()
   const params: paramsType = useParams();
   const renderer = new marked.Renderer();
   marked.setOptions({
@@ -41,7 +46,7 @@ const AddArticle: FC<AppProps> = props => {
   const [introducemd, setIntroducemd] = useState('')            //简介的markdown内容
   const [introducehtml, setIntroducehtml] = useState('') //简介的html内容
   const [selectedType, setSelectType] = useState<number>(-1) //选择的文章类别
-  const [list, setList] = useState<CategoryList[]>([])
+  
   function leftMdChange(val: string) {
     if (val === articleContent) {
       return
@@ -61,31 +66,6 @@ const AddArticle: FC<AppProps> = props => {
     setSelectType(e)
   }
   const nowDate = '' + new Date().getFullYear() + (new Date().getMonth() + 1) + new Date().getDate()
-  async function getList() {
-    function getChildren(root: CategoryList, arr: CategoryList[], dep: number) {
-      if (!root.child.length) {
-        return
-      }
-      root.child.forEach((item: CategoryList) => {
-        item.lv = dep
-        arr.push(item)
-        getChildren(item, arr, dep + 1)
-      })
-    }
-    let res = await category.getCategoryList()
-    if (res.code === 200) {
-      let arr: CategoryList[] = []
-      res.data.list.forEach((item: CategoryList) => {
-        item.lv = 1
-        arr.push(item)
-        getChildren(item, arr, 2)
-      })
-      setList(arr)
-      // console.log('list:', arr);
-    } else {
-      message.error(res.message)
-    }
-  }
 
   async function submit(type: string) {
     if (!articleTitle.length) {
@@ -193,7 +173,6 @@ const AddArticle: FC<AppProps> = props => {
     }
   }
   useEffect(() => {
-    getList()
     getData()
   }, [])
   return (
@@ -223,21 +202,10 @@ const AddArticle: FC<AppProps> = props => {
                 />
               </Col>
               <Col span={4}>
-                <Select
-                  style={{ width: '100%' }}
-                  size="large"
-                  placeholder='选择分类'
-                  onSelect={selectType}
-                  value={selectedType == -1 ? null : selectedType}
-                >
-                  {
-                    list.map((item) => {
-                      return (
-                        <Option key={item.id} value={item.id}>{item.name}</Option>
-                      )
-                    })
-                  }
-                </Select>
+                <CategorySelect 
+                  selectedType={selectedType}
+                  selectType={selectType}
+                />
               </Col>
             </Row>
             <br />
@@ -299,5 +267,5 @@ const AddArticle: FC<AppProps> = props => {
   )
 }
 export default connect(
-  ({ User }: { User: UserModelState }) => ({ User })
+  ({ User,Category }: { User: UserModelState ,Category:CategoryModelState}) => ({ User,Category })
 )(AddArticle);

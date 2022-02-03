@@ -6,7 +6,7 @@ import article from '@/service/article';
 import { ArticleInfo } from '@/types';
 import { Pagination } from 'antd';
 import moment, { Moment } from 'moment';
-
+import CategorySelect from '@/components/categorySelect'
 interface AppProps extends ConnectProps {
   User: UserModelState;
 }
@@ -15,6 +15,7 @@ const { TextArea } = Input
 const { RangePicker } = DatePicker;
 const ArticleList: FC<AppProps> = props => {
   const [list, setList] = useState<Array<ArticleInfo>>([])
+  const [selectedType, setSelectType] = useState<number>(-1) //选择的文章类别
   const [isLoading, setIsLoading] = useState(false)
   const [size, setSize] = useState(10)
   const [page, setPage] = useState(1)
@@ -85,6 +86,10 @@ const ArticleList: FC<AppProps> = props => {
     console.log('search');
     
   }
+  function selectType(e: number) {
+    console.log(e);
+    setSelectType(e)
+  }
   useEffect(() => {
     getList(page, size)
   }, [])
@@ -96,13 +101,12 @@ const ArticleList: FC<AppProps> = props => {
         </Modal>
         <div className={styles.Row}>
           <Input onChange={(e)=>setKeywords(e.target.value.trim())} value={keywords} className={styles.keyinp} placeholder='关键词搜索'></Input>
-          <Select 
-            size="large" 
-            className={styles.select}
-            placeholder='选择分类'
-          >
-
-          </Select>
+          <div className={styles.select}>
+            <CategorySelect 
+              selectedType={selectedType}
+              selectType={selectType}
+            />
+          </div>
         
           <RangePicker
             className={styles.range}

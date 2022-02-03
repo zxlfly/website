@@ -18,7 +18,7 @@ const IndexPage: FC<AppProps> = props => {
   const userinfo = useSelector(({ User }: { User: UserModelState }) => ({ User }))
   const [refkey,setRefkey] = useState(props.location.pathname)
   function getkey (){
-    console.log(props.location.pathname=='/');
+    // console.log(props.location.pathname=='/');
     
     if (props.location.pathname.startsWith('/handleCategory')) {
       setRefkey('/categoryList') 
@@ -28,7 +28,7 @@ const IndexPage: FC<AppProps> = props => {
   }
   useEffect(() => {
     getkey()
-    console.log('userinfo',props.location.pathname);
+    // console.log('userinfo',props.location.pathname);
   }, [props.location.pathname])
   const [collapsed, setCollapse] = useState(false)
   function itemClick(e: any) {

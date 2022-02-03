@@ -1,16 +1,12 @@
 import styles from './index.css';
 import { List, Avatar, Button, Skeleton, Row, message, Spin, Modal } from 'antd';
 import { FC, useEffect, useState } from 'react';
-import {
-  ReadOutlined,
-  PartitionOutlined,
-  ToolOutlined,
-} from '@ant-design/icons';
 import Header from './components/Header';
 import category from '@/service/category';
-import { ConnectProps } from 'umi';
-import login from '@/service/user';
+import { ConnectProps, useDispatch, useSelector } from 'umi';
 import { CategoryList } from '@/types';
+import getCategoryList from '@/utils/getCategoryList';
+import { CategoryModelState } from '@/models/category';
 
 interface AppProps extends ConnectProps{
 
@@ -22,7 +18,8 @@ interface handleProps {
   name?:string
 }
 const IndexPage:FC<AppProps>=props=>{
-
+  const dispatch = useDispatch()
+  const categoryListState = useSelector(({ Category }: { Category: CategoryModelState }) => (Category))
   const [initLoading, setInitLoading] = useState(false)
   const [list, setList] = useState<CategoryList[]>([])
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -35,46 +32,19 @@ const IndexPage:FC<AppProps>=props=>{
     setInitLoading(false)
     if(res.code===200){
       message.success('已删除：'+chooseItem.name)
-      getList()
+      getCategoryList(dispatch,setInitLoading)
     }else{
       message.error(res.message)
       if(res.code==-2){
-        getList()
+        getCategoryList(dispatch,setInitLoading)
       }
     }
   };
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  async function getList() {
-    function getChildren(root:CategoryList,arr:CategoryList[],dep:number) {
-      if(!root.child.length){
-        return
-      }
-      root.child.forEach((item:CategoryList)=>{
-        item.lv=dep
-        arr.push(item)
-        getChildren(item,arr,dep+1)
-      })
-    }
-    setInitLoading(true)
-    let res = await category.getCategoryList()
-    if(res.code===200){
-      let arr: CategoryList[] = []
-      res.data.list.forEach((item:CategoryList)=>{
-        item.lv=1
-        arr.push(item)
-        getChildren(item,arr,2)
-      })
-      setList(arr)
-      // console.log('list:',arr);
-    }else{
-      message.error(res.message)
-    }
-    setInitLoading(false)
-  }
   useEffect(() => {
-    getList()
+    getCategoryList(dispatch,setInitLoading)
   }, [])
   function handleDel(id:number,name:string){
     // console.log(id);
@@ -102,7 +72,7 @@ const IndexPage:FC<AppProps>=props=>{
       <List
         className={styles.list}
         itemLayout="horizontal"
-        dataSource={list}
+        dataSource={categoryListState.list}
         bordered={true}
         size={'large'}
         renderItem={item => (
