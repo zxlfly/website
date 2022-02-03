@@ -120,7 +120,7 @@ const ArticleList: FC<AppProps> = props => {
               'This Month': [moment().startOf('month'), moment().endOf('month')],
             }}
             showTime
-            format="YYYY/MM/DD HH:mm:ss"
+            format="YYYY-MM-DD HH:mm:ss"
             onChange={selectDate}
           />
           <Button onClick={search} className={styles.submit} type={'primary'}>搜索</Button>

@@ -30,6 +30,9 @@ const CategorySelect: FC<Props> = (props) => {
         onSelect={selectType}
         value={selectedType == -1 ? null : selectedType}
       >
+        <Option key={-1} value={-1}>
+        选择分类
+        </Option>
         {
           category.list.length>0&&category.list.map((item) => {
             return <Option disabled={item.disable} key={item.id} value={item.id}>

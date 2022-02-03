@@ -1,12 +1,12 @@
 'use strict';
 const BaseController = require('./base');
-const {Op} = require('sequelize')
+const { Op } = require('sequelize')
 class ArticleController extends BaseController {
   async index() {
     const { ctx, app } = this;
     console.log(ctx.request.body);
     try {
-      let {page, size ,keywords,searchDate,selectedType} = ctx.request.body
+      let { page, size, keywords, searchDate, selectedType } = ctx.request.body
       page = Number(page)
       size = Number(size)
       if (page < 1 || size < 0) {
@@ -16,29 +16,44 @@ class ArticleController extends BaseController {
       const offset = (page - 1) * size
       let selectedTypeObj = {}
       // 根据分类查询
-      if(selectedType!=-1){
-        selectedTypeObj={
-          pid:selectedType
+      if (selectedType != -1) {
+        selectedTypeObj = {
+          pid: selectedType
         }
       }
       // 根基关键词模糊匹配
-      let keywordsobj={}
-      if(keywords!=''){
+      let keywordsobj = {}
+      if (keywords != '') {
         keywordsobj = { title: { [Op.like]: `%${keywords}%` } }
       }
       // 根据时间段匹配
       let serachDateObj
-      if(searchDate[0]!=''&&searchDate[1]!=''){
-        console.log(333);
+      if (searchDate[0] != '' && searchDate[1] != '') {
+        serachDateObj = {
+          created_at: {
+            [Op.between]: [...searchDate]
+          }
+        }
       }
-      const { count, rows } = await ctx.model.Article.findAndCountAll({
-        order: [[ 'updated_at', 'DESC' ]],
+      console.log({
+        order: [['updated_at', 'DESC']],
         offset,
         limit: size,
-        where:{
+        where: {
           ...selectedTypeObj,
-          ...keywordsobj
+          ...keywordsobj,
+          ...serachDateObj
         }
+      });
+      const { count, rows } = await ctx.model.Article.findAndCountAll({
+        where: {
+          ...selectedTypeObj,
+          ...keywordsobj,
+          ...serachDateObj
+        },
+        order: [['updated_at', 'DESC']],
+        offset,
+        limit: size,
       });
       // console.log(count, rows)
       if (rows) {
@@ -53,11 +68,11 @@ class ArticleController extends BaseController {
   }
   async add() {
     const { ctx, app } = this;
-    const { articleId, pid, title, introduction, content,sort } = ctx.request.body;
+    const { articleId, pid, title, introduction, content, sort } = ctx.request.body;
     console.log(ctx.request.body);
     try {
       const ret = await ctx.model.Article.create({
-        pid, title, introduction, content,sort
+        pid, title, introduction, content, sort
       })
       if (ret) {
         if (articleId != -1) {
@@ -97,14 +112,14 @@ class ArticleController extends BaseController {
   }
   async editArticle() {
     const { ctx, app } = this;
-    const { id ,pid, title, introduction, content,sort} = ctx.request.body;
+    const { id, pid, title, introduction, content, sort } = ctx.request.body;
     console.log(ctx.request.body);
     // return this.error({}, '编辑失败')
     const ret = await ctx.model.Article.findByPk(id);
-    try{
+    try {
       if (ret) {
         const ret = await ctx.model.Article.update(
-          { pid, title, introduction, content, sort},
+          { pid, title, introduction, content, sort },
           {
             where: {
               id
@@ -119,7 +134,7 @@ class ArticleController extends BaseController {
       } else {
         this.error({}, '编辑失败')
       }
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
   }
