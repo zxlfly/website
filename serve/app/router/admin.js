@@ -18,4 +18,5 @@ module.exports = app => {
   router.post('/admin/category/add',jwt, controller.admin.category.add);
   router.post('/admin/category/edit',jwt, controller.admin.category.edit);
   router.post('/admin/category/del',jwt, controller.admin.category.del);
+  // 网站信息
 }

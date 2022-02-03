@@ -46,14 +46,14 @@ class ArticleController extends BaseController {
         }
       });
       const { count, rows } = await ctx.model.Article.findAndCountAll({
+        order: [['updated_at', 'DESC']],
+        offset,
+        limit: size,
         where: {
           ...selectedTypeObj,
           ...keywordsobj,
           ...serachDateObj
-        },
-        order: [['updated_at', 'DESC']],
-        offset,
-        limit: size,
+        }
       });
       // console.log(count, rows)
       if (rows) {
