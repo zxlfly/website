@@ -4,7 +4,8 @@
 前台，基于nextjs
 
 ## admin
-后台管理，基于umi
+后台管理，基于umi+dva+ts
 
 ## serve
-后台 eggjs+mysql+es
+后台 eggjs+mysql
+!todo es + redis
