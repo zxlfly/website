@@ -14,7 +14,7 @@ export interface CategoryList {
   name:string,
   des:string,
   lv:number,
-  child:Array<CategoryList>,
+  children:Array<CategoryList>,
   disable:boolean
 }
 export type Category={

@@ -1,4 +1,5 @@
 @import url('./components/md.css');
+@import 'highlightjs/styles/monokai_sublime.css';
 html,
 body {
   padding: 0;
@@ -17,4 +18,13 @@ a {
 }
 .ant-menu-horizontal{
   border-bottom:none;
+}
+code {
+  display: block ;
+   background-color:#f3f3f3;
+   padding: .5rem !important;
+   overflow-y: auto;
+   font-weight: 300;
+   font-family: Menlo, monospace;
+   border-radius: .3rem;
 }

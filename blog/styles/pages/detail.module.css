@@ -15,15 +15,7 @@
   padding: 1.3rem;
   font-size: 1rem;
 }
-.code {
-  display: block ;
-   background-color:#f3f3f3;
-   padding: .5rem !important;
-   overflow-y: auto;
-   font-weight: 300;
-   font-family: Menlo, monospace;
-   border-radius: .3rem;
-}
+
 .title_anchor{
   color:#888 !important;
   padding:4px !important;
@@ -40,5 +32,4 @@
   text-align: center;
   color: #888;
   border-bottom: 1px solid rgb(30, 144, 255);
-
 }

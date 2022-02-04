@@ -1,11 +1,6 @@
 import React, { useState } from 'react'
-import Head from 'next/head'
-import { Row, Col, List, Affix, Breadcrumb } from 'antd'
+import {  List, Breadcrumb } from 'antd'
 import styles from '../styles/pages/list.module.css'
-import Header from '../components/Header'
-import Author from '../components/Author'
-import Advert from '../components/Advert'
-import Footer from '../components/Footer'
 import {
   CalendarOutlined,
   FolderViewOutlined,
@@ -22,19 +17,11 @@ const Home = () => {
   )
   return (
     <>
-      <Head>
-        <title>Home</title>
-      </Head>
-      <Affix offsetTop={0}>
-        <Header />
-      </Affix>
-      <Row className="comm-main" justify="center">
-        <Col className="comm-left" xs={24} sm={24} md={16} lg={18} xl={14}  >
-          <div>
+     <div>
             <div className={styles.bread}>
               <Breadcrumb>
                 <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                <Breadcrumb.Item>视频列表</Breadcrumb.Item>
+                <Breadcrumb.Item>文章列表</Breadcrumb.Item>
               </Breadcrumb>
             </div>
 
@@ -55,14 +42,6 @@ const Home = () => {
             />
 
           </div>
-        </Col>
-
-        <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4}>
-          <Author />
-          <Advert />
-        </Col>
-      </Row>
-      <Footer />
     </>
   )
 }

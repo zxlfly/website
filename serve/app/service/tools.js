@@ -29,10 +29,10 @@ class ToolsService extends Service {
         },
         raw: true
       })
-      roots = await getChild(roots);
+      roots = await getChildren(roots);
       return roots;
     }
-    async function getChild(roots) {
+    async function getChildren(roots) {
       let expendPromise = [];
       roots.forEach(item => {
         expendPromise.push(model.findAll({
@@ -45,9 +45,9 @@ class ToolsService extends Service {
       let child = await Promise.all(expendPromise);
       for (let [idx, item] of child.entries()) {
         if (item.length > 0) {
-          item = await getChild(item);
+          item = await getChildren(item);
         }
-        roots[idx].child = item;
+        roots[idx].children = item;
       }
       return roots;
     }
