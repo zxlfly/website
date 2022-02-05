@@ -1,5 +1,5 @@
 'use strict';
-const BaseController = require('./base');
+const BaseController = require('../base');
 const { Op } = require('sequelize')
 class ArticleController extends BaseController {
   async index() {
@@ -35,16 +35,6 @@ class ArticleController extends BaseController {
           }
         }
       }
-      console.log({
-        order: [['updated_at', 'DESC']],
-        offset,
-        limit: size,
-        where: {
-          ...selectedTypeObj,
-          ...keywordsobj,
-          ...serachDateObj
-        }
-      });
       const { count, rows } = await ctx.model.Article.findAndCountAll({
         order: [['updated_at', 'DESC']],
         offset,

@@ -32,13 +32,13 @@ const UserModel: UserModelType = {
   effects: {
     *toLogin({ payload, cb }, { call, put }) {
       const res:ApiRespone<UserInfo> = yield call(login,payload.userName,payload.password)
-      const {code,data,message} = res
-      const {name} =data
-      if (code==200) {
-        yield put({ type: 'login',payload:{name} })
+      console.log(res);
+      if (res.code==200) {
+        yield put({ type: 'login',payload:{name:res.data.name} })
         cb(true)
       } else {
-        cb(message)
+        console.log(222);
+        cb(res.message)
       }
     },
     *toLoginOut({ payload }, { call, put }) {

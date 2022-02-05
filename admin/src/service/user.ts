@@ -9,6 +9,7 @@ export default async function login (userName:string,password:string):Promise<Ap
       pwd:md5(password)
     })
     .then(function (data) {
+      
       return resolve(data.data);
     })
     .catch(function (error) {

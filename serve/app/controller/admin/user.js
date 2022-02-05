@@ -1,5 +1,5 @@
 'use strict';
-const BaseController = require('./base');
+const BaseController = require('../base');
 const md5 = require('md5');
 const jwt = require('jsonwebtoken');
 function toInt(str) {

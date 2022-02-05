@@ -1,5 +1,5 @@
 'use strict';
-const BaseController = require('./base');
+const BaseController = require('../base');
 const sequelize = require('sequelize')
 class CategoryController extends BaseController {
   async index() {
