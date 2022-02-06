@@ -7,7 +7,7 @@ class HomeController extends BaseController {
     const { ctx, app } = this;
     console.log(ctx.request.body);
     try {
-      let { page, size, keywords, searchDate, selectedType } = ctx.request.body
+      let { page, size } = ctx.request.body
       page = Number(page)
       size = Number(size)
       if (page < 1 || size < 0) {

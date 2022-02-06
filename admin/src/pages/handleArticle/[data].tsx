@@ -2,14 +2,11 @@ import { FC, useEffect, useState } from 'react';
 import { marked } from 'marked'
 import hljs from "highlightjs";
 import 'moment/locale/zh-cn';
-import 'highlightjs/styles/monokai_sublime.css';
 import './index.css'
-import { Row, Col, Input, Select, Button, DatePicker, ConfigProvider, message, Spin, Breadcrumb } from 'antd'
+import { Row, Col, Input, Select, Button,message, Spin, Breadcrumb } from 'antd'
 import { connect, ConnectProps, useDispatch, useParams, UserModelState } from 'umi';
-import { ApiRespone, ArticleCatche, ArticleList, CategoryList } from '@/types';
-import category from '@/service/category';
+import { ApiRespone, ArticleCatche, ArticleList } from '@/types';
 import article from '@/service/article';
-import Item from 'antd/lib/list/Item';
 import { CategoryModelState } from '@/models/category';
 import CategorySelect from '@/components/categorySelect'
 interface AppProps extends ConnectProps {
@@ -33,7 +30,7 @@ const AddArticle: FC<AppProps> = props => {
     breaks: false,
     smartLists: true,
     smartypants: false,
-    highlight: function (code: any) {
+    highlight: function (code:any) {
       return hljs.highlightAuto(code).value;
     }
   });
@@ -52,14 +49,14 @@ const AddArticle: FC<AppProps> = props => {
       return
     }
     setArticleContent(val)
-    setMarkdownContent(marked(val))
+    setMarkdownContent(marked.parse(val))
   }
   function rightMdChange(val: string) {
     if (val === introducemd) {
       return
     }
     setIntroducemd(val)
-    setIntroducehtml(marked(val))
+    setIntroducehtml(marked.parse(val))
   }
   function selectType(e: number) {
     console.log(e);

@@ -2,18 +2,17 @@ import React, { useState } from 'react'
 import { Breadcrumb } from 'antd'
 import styles from '../styles/pages/detail.module.css'
 import { CalendarOutlined, FolderViewOutlined, FireOutlined, } from '@ant-design/icons';
-import { marked } from 'marked'
+import {marked} from 'marked'
 import hljs from "highlightjs";
-import 'highlightjs/styles/monokai_sublime.css';
+// 样式已在全局引入
 const Home = () => {
-  let markdown = '# P01:课程介绍和环境搭建\n' +
-    '[ **M** ] arkdown + E [ **ditor** ] = **Mditor**  \n' +
-    '> Mditor 是一个简洁、易于集成、方便扩展、期望舒服的编写 markdown 的编辑器，仅此而已... \n\n' +
-    '**这是加粗的文字**\n\n' +
-    '*这是倾斜的文字*`\n\n' +
-    '***这是斜体加粗的文字***\n\n' +
-    '~~这是加删除线的文字~~ \n\n' +
-    '\`\`\`console.log(111 \n\加快递费舍\n\不得放开角标数就开发不上架的北京市白癜风基本上飞机凯宾斯基笔记本就不接受吧就不涉及部分)\`\`\`'
+  let markdown = `
+  \`\`\`
+  var a = 111;
+  const b = 22;
+  let v = 2;
+  \`\`\`
+  `
   const renderer = new marked.Renderer();
 
   marked.setOptions({
@@ -21,7 +20,6 @@ const Home = () => {
     gfm: true,
     pedantic: false,
     sanitize: false,
-    tables: true,
     breaks: false,
     smartLists: true,
     smartypants: false,
@@ -29,8 +27,6 @@ const Home = () => {
       return hljs.highlightAuto(code).value;
     }
   });
-
-  let html = marked(markdown)
   return (
     <>
       <div>
@@ -55,7 +51,7 @@ const Home = () => {
 
           <div
             className={styles.detailed_content}
-            dangerouslySetInnerHTML={{ __html: html }}
+            dangerouslySetInnerHTML={{ __html: marked.parse(markdown) }}
           >
           </div>
 
