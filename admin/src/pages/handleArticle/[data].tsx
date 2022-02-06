@@ -9,6 +9,7 @@ import { ApiRespone, ArticleCatche, ArticleList } from '@/types';
 import article from '@/service/article';
 import { CategoryModelState } from '@/models/category';
 import CategorySelect from '@/components/categorySelect'
+import useDebounce from '@/utils/useDebounce';
 interface AppProps extends ConnectProps {
   User: UserModelState;
   Category:CategoryModelState
@@ -44,19 +45,21 @@ const AddArticle: FC<AppProps> = props => {
   const [introducehtml, setIntroducehtml] = useState('') //简介的html内容
   const [selectedType, setSelectType] = useState<number>(-1) //选择的文章类别
   const [sort,setSort] = useState(99)
+  let leftDebounce = useDebounce((val: string)=>setMarkdownContent(marked.parse(val)))
   function leftMdChange(val: string) {
     if (val === articleContent) {
       return
     }
     setArticleContent(val)
-    setMarkdownContent(marked.parse(val))
+    leftDebounce(val)
   }
+  let rightDebounce = useDebounce((val: string)=>setIntroducehtml(marked.parse(val)))
   function rightMdChange(val: string) {
     if (val === introducemd) {
       return
     }
     setIntroducemd(val)
-    setIntroducehtml(marked.parse(val))
+    rightDebounce(val)
   }
   function selectType(e: number) {
     console.log(e);
