@@ -2,6 +2,7 @@ import { Layout, Menu, Breadcrumb, Modal, ConfigProvider, BackTop } from 'antd';
 import {
   ReadOutlined,
   PartitionOutlined,
+  BankOutlined,
 } from '@ant-design/icons';
 import { FC, useEffect, useState } from 'react';
 
@@ -66,6 +67,9 @@ const IndexPage: FC<AppProps> = props => {
             </Menu.Item>
             <Menu.Item title='分类列表' key="/categoryList" icon={<PartitionOutlined />}>
               分类列表
+            </Menu.Item>
+            <Menu.Item title='分类列表' key="/info" icon={<BankOutlined />}>
+              网站信息
             </Menu.Item>
           </Menu>
         </Sider>

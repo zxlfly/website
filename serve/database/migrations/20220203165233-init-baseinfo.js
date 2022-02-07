@@ -11,6 +11,7 @@ module.exports = {
       zhihu:STRING,
       qq:STRING,
       des:STRING,
+      bilibili:STRING,
       logo_white:STRING,
       logo_black:STRING,
       created_at: DATE,

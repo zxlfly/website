@@ -13,7 +13,8 @@ export default defineConfig({
         { exact: true, path: '/articleList', component: '@/pages/articleList' },
         { exact: true, path: '/categoryList', component: '@/pages/categoryList' },
         { exact: true, path: '/handleCategory/:data', component: '@/pages/handleCategory/[data]'},
-        {exact: true, path: '/handleArticle/:data', component: '@/pages/handleArticle/[data]'}
+        {exact: true, path: '/handleArticle/:data', component: '@/pages/handleArticle/[data]'},
+        {exact: true, path: '/info', component: '@/pages/info'}
       ]
     },
   ],
