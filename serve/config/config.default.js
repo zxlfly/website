@@ -43,6 +43,12 @@ module.exports = appInfo => {
       underscored: true,
       freezeTableName: true,
     },
+    dialectOptions:{
+      dataStrings:true,
+      typeCast:true
+    },
+    timestamps: false,
+    paranoid:false
   };
   return {
     ...config,

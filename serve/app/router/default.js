@@ -6,4 +6,5 @@ module.exports = app => {
   router.post('/api/getDetail', controller.default.home.getDetail);
   router.post('/api/getInfo', controller.default.home.getInfo);
   router.post('/api/getAd', controller.default.home.getAd);
+  router.post('/api/getNav', controller.default.home.getNav);
 }
