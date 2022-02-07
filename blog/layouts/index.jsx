@@ -5,7 +5,6 @@ import Header from '../components/Header'
 import Author from '../components/Author'
 import Footer from '../components/Footer'
 import Nav from '../components/Nav'
-import Advert from '../components/Advert'
 import zhCN from 'antd/lib/locale/zh_CN';
 const Layout = (props) => {
   return (
@@ -27,10 +26,6 @@ const Layout = (props) => {
         <Col className="comm-right" xs={24} sm={24} md={7} lg={5} xl={4}>
           <Author />
           <Nav />
-          <Affix offsetTop={70}>
-            <Advert />
-          </Affix>
-
         </Col>
       </Row>
       <Footer />

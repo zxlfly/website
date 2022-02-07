@@ -16,6 +16,7 @@ const Home = (props) => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(props.data.count)
   const [list, setList] = useState(props.data.list)
+  const [preId,setPreId] = useState(-1)
   function onChange(pageNumber, pageSize) {
     if (pageSize !== size) {
       setSize(pageSize)
@@ -48,7 +49,10 @@ const Home = (props) => {
   }
   useEffect(()=>{
     console.log('bianle',props.stack,router.query.id);
-    if(props.stack!==router.query.id){
+    if(preId==-1){
+      setPreId(props.stack)
+    }
+    if(props.stack!==router.query.id||props.stack==router.query.id){
       setPage(1)
       getList(1,size)
     }
@@ -98,7 +102,6 @@ Home.getInitialProps = async function (context) {
     size: 20,
     id:context.query.id
   })
-  console.log(res.data.code);
   res.data.stack=context.query.id
   return res.data
 }
