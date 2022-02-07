@@ -1,15 +1,19 @@
 import React from 'react'
 import Head from 'next/head'
-import { Row, Col, Affix ,BackTop} from 'antd'
+import { Row, Col, Affix, BackTop,ConfigProvider } from 'antd'
 import Header from '../components/Header'
 import Author from '../components/Author'
 import Footer from '../components/Footer'
 import Nav from '../components/Nav'
+import Advert from '../components/Advert'
+import zhCN from 'antd/lib/locale/zh_CN';
 const Layout = (props) => {
   return (
-    <>
+    <ConfigProvider locale={zhCN}>
       <Head>
-        <title>Home</title>
+        <title>首页 | zxlfly</title>
+        <meta name="description" content=""></meta>
+        <link rel="icon" href="../public/favicon.ico" mce_href="../public/favicon.ico" type="image/x-icon" />
       </Head>
       <Affix offsetTop={0}>
         <Header />
@@ -20,13 +24,17 @@ const Layout = (props) => {
           <BackTop visibilityHeight={10} />
         </Col>
 
-        <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4}>
+        <Col className="comm-right" xs={24} sm={24} md={7} lg={5} xl={4}>
           <Author />
           <Nav />
+          <Affix offsetTop={70}>
+            <Advert />
+          </Affix>
+
         </Col>
       </Row>
       <Footer />
-    </>
+    </ConfigProvider>
   )
 }
 

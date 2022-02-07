@@ -16,4 +16,4 @@
 detail为单独的表，detail以上的层级都menu表自关联，定义层级字段。
 
 ## 关键词搜索
-先不做，后面主体功能完善了使用elaticsearch实现。
+后面主体功能完善了使用elaticsearch实现。

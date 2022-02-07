@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import Head from 'next/head'
 import { List, Pagination, Affix, Skeleton, message } from 'antd'
-import styles from '../styles/pages/index.module.css'
-import apiPath from '../config/request'
+import styles from '../../styles/pages/index.module.css'
+import apiPath from '../../config/request'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import {
   CalendarOutlined,
 } from '@ant-design/icons';
 const Home = (props) => {
+  // console.log('props',props);
   const [isLoading,setIsLoading] = useState(false)
+  const router= useRouter()
   const [size, setSize] = useState(10)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(props.data.count)
   const [list, setList] = useState(props.data.list)
-  const router = useRouter()
   function onChange(pageNumber, pageSize) {
     if (pageSize !== size) {
       setSize(pageSize)
@@ -27,24 +28,16 @@ const Home = (props) => {
   }
   const getList = async(page,size)=>{
     setIsLoading(true)
-    const promise = new Promise((resolve,reject) => {
-      axios.post(apiPath.getIndex, {
-        page,
-        size
-      }).then(
-        (res) => {
-          resolve(res.data)
-        }
-      ).catch(e=>{
-        console.log(e);
-        setIsLoading(false)
-        // reject({code:-1,list:[],message:'获取文章列表失败'})
-      })
+    let res = await axios.post(apiPath.getList, {
+      page,
+      size,
+      id:router.query.id
     })
-    let res =  await promise
+    let data = res.data  
+    // console.log(data);  
     setIsLoading(false)
-    if(res.code==200){
-      setList(res.data.list)
+    if(data.code==200){
+      setList(data.data.list)
     }else{
       message.error('加载失败')
     }
@@ -53,10 +46,17 @@ const Home = (props) => {
     console.log(id);
     router.push('/detail/'+id)
   }
+  useEffect(()=>{
+    console.log('bianle',props.stack,router.query.id);
+    if(props.stack!==router.query.id){
+      setPage(1)
+      getList(1,size)
+    }
+  },[router.query.id])
   return (
     <>
       <List
-        header={<div>最新日志</div>}
+        header={<div>文章列表</div>}
         itemLayout="vertical"
         dataSource={list}
         renderItem={item => (
@@ -92,11 +92,14 @@ const Home = (props) => {
   )
 }
 
-Home.getInitialProps = async function () {
-  let res = await axios.post(apiPath.getIndex, {
+Home.getInitialProps = async function (context) {
+  let res = await axios.post(apiPath.getList, {
     page: 1,
-    size: 20
+    size: 20,
+    id:context.query.id
   })
+  console.log(res.data.code);
+  res.data.stack=context.query.id
   return res.data
 }
 export default Home
