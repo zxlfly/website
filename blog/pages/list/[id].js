@@ -9,14 +9,13 @@ import {
   CalendarOutlined,
 } from '@ant-design/icons';
 const Home = (props) => {
-  // console.log('props',props);
   const [isLoading,setIsLoading] = useState(false)
   const router= useRouter()
   const [size, setSize] = useState(10)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(props.data.count)
   const [list, setList] = useState(props.data.list)
-  const [preId,setPreId] = useState(-1)
+  const [preId,setPreId] = useState(props.stack??-1)
   function onChange(pageNumber, pageSize) {
     if (pageSize !== size) {
       setSize(pageSize)
@@ -24,7 +23,6 @@ const Home = (props) => {
     if (pageNumber != page) {
       setPage(pageNumber)
     }
-    console.log(pageNumber, pageSize);
     getList(pageNumber,pageSize)
   }
   const getList = async(page,size)=>{
@@ -35,7 +33,6 @@ const Home = (props) => {
       id:router.query.id
     })
     let data = res.data  
-    // console.log(data);  
     setIsLoading(false)
     if(data.code==200){
       setList(data.data.list)
@@ -44,14 +41,9 @@ const Home = (props) => {
     }
   }
   const toDetail = (id) => {
-    console.log(id);
     router.push('/detail/'+id)
   }
   useEffect(()=>{
-    console.log('bianle',props.stack,router.query.id);
-    if(preId==-1){
-      setPreId(props.stack)
-    }
     if(props.stack!==router.query.id||props.stack==router.query.id){
       setPage(1)
       getList(1,size)

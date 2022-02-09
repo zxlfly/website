@@ -1,7 +1,7 @@
 import axios,{AxiosRequestConfig, AxiosRequestHeaders,AxiosResponse} from "axios";
 import { history } from 'umi';
-const apiurl = "http://127.0.0.1:7001/admin/"
-// const imgurl = "http://127.0.0.1:7001/public/admin/upload"
+export const apiurl = "http://127.0.0.1:7001/admin/"
+export const imgurl = "http://127.0.0.1:7001"
 export const TOKEN_KEY = "BLOG_USER_TOKEN"
 const service = axios.create({
     baseURL: apiurl,

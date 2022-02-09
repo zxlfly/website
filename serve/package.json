@@ -11,9 +11,12 @@
     "egg-cors": "^2.2.3",
     "egg-scripts": "^2.11.0",
     "egg-sequelize": "^6.0.0",
+    "fs-extra": "^10.0.0",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
     "mysql2": "^2.3.3",
+    "mz-modules": "^2.1.0",
+    "silly-datetime": "^0.1.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

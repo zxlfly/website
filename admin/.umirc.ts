@@ -1,6 +1,8 @@
 import { defineConfig } from 'umi';
 
 export default defineConfig({
+  favicon: './img/favicon.ico',
+  title:'zxlfly个人网站后台管理系统',
   nodeModulesTransform: {
     type: 'none',
   },

@@ -3,6 +3,8 @@
 const md5 = require('md5');
 const path = require('path');
 const Service = require('egg').Service;
+const sd = require('silly-datetime');
+const mkdirp = require('mz-modules/mkdirp');
 class ToolsService extends Service {
   // async captcha() {
   //   const captcha = svgCaptcha.create({
@@ -14,6 +16,22 @@ class ToolsService extends Service {
   //   this.ctx.session.code = captcha.text;
   //   return captcha;
   // }
+  async getUploadFile(filename) {
+    // 1、获取当前日期
+    const day = sd.format(new Date(), 'YYYYMMDD');
+    // 2、创建图片保存的路径
+    // console.log(this.config.uploadDir, day);
+    const dir = path.join(this.config.uploadDir, day);
+    await mkdirp(dir);
+    const d = await this.getTime(); /* 毫秒数*/
+    // 返回图片保存的路径
+    const uploadDir = path.join(dir, d + path.extname(filename));
+    // app\public\admin\upload\20200914\1536895331444.png
+    return {
+      uploadDir,
+      saveDir: uploadDir.slice(3).replace(/\\/g, '/'),
+    };
+  }
   async md5(str) {
     return md5(str);
   }

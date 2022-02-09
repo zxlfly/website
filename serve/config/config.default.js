@@ -17,7 +17,7 @@ module.exports = appInfo => {
   config.HashSalt = 'uZserlogXinHashSaLlt';
   // add your middleware config here
   config.middleware = ['errorHandler'];
-
+  config.uploadDir = 'app/public/admin/upload';
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
@@ -31,6 +31,10 @@ module.exports = appInfo => {
   config.cors = {
     origin: '*',
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
+  };
+  config.multipart = {
+    mode: 'file',
+    // whitelist: () => true,
   };
   config.sequelize = {
     dialect: 'mysql',

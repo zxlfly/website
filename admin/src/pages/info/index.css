@@ -1,0 +1,17 @@
+.list{
+  background:#fff;
+  min-height: 50vh;
+}
+.header{
+  height: 60px;
+}
+.col{
+  padding: 10px;
+}
+.switch{
+  margin-top: 10px;
+  margin-right:10px;
+}
+.logo{
+  padding: 10px;
+}

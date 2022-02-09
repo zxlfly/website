@@ -3,14 +3,16 @@ import { useEffect ,useState} from 'react';
 import axios from 'axios';
 import apiPath from '../config/request';
 import Link from 'next/link'
+import { useRouter } from 'next/router';
+
 const { SubMenu } = Menu;
 function NavPage() {
+  const router = useRouter()
   const [isLoading,setIsLoading] = useState(false)
   const [list,setList] = useState([])
   const getDate = async () => {
     setIsLoading(true)
     let res = await axios.post(apiPath.getNav)
-    console.log('nav', res.data);
     setIsLoading(false)
     if (res.data.code == 200) {
       let menu = renderMenu(res.data.data.list)
@@ -44,7 +46,20 @@ function NavPage() {
     create(list,menu)
     return menu
   }
+  const [refKey,setRefkey]=useState('/index')
+  function getkey (){
+    // console.log(router);
+    if(router.pathname=='/'){
+      setRefkey('/index') 
+    }else if(router.pathname.startsWith('/list/')){
+      setRefkey(router.query.id)
+    }
+  }
   useEffect(() => {
+    getkey()
+  }, [router.asPath])
+  useEffect(() => {
+    
     getDate()
   }, [])
   return (
@@ -54,7 +69,13 @@ function NavPage() {
         <Menu
           style={{ width: '100%' }}
           mode="inline"
+          selectedKeys={[refKey]}
         >
+          <Menu.Item key='/index'>
+            <Link href={'/'}>
+              最近日志
+            </Link>
+          </Menu.Item>
           {list}
         </Menu>
       </Skeleton>

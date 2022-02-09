@@ -7,4 +7,6 @@ module.exports = app => {
   router.post('/api/getInfo', controller.default.home.getInfo);
   router.post('/api/getAd', controller.default.home.getAd);
   router.post('/api/getNav', controller.default.home.getNav);
+  // 网站信息
+  router.get('/api/getInfo', controller.admin.info.index);
 }

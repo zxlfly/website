@@ -57,7 +57,7 @@ const IndexPage: FC<AppProps> = props => {
     <ConfigProvider locale={zhCN}>
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={collapsed} onCollapse={setCollapse}>
-          <img className={styles.logo} src={require("../../public/img/logoko-w.png")} alt="" />
+          <img className={styles.logo} src={require("../../public/img/logo-w.png")} alt="" />
           <Menu onSelect={itemClick} theme="dark" defaultSelectedKeys={[refkey]} mode="inline">
             <Menu.Item title='添加文章' key="/" icon={<ReadOutlined />}>
               添加文章
