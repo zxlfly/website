@@ -1,14 +1,14 @@
 {
   "development": {
     "username": "root",
-    "password": "github941109",
+    "password": "********",
     "database": "blog",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": "github941109",
+    "password": "********",
     "database": "blog",
     "host": "127.0.0.1",
     "dialect": "mysql"

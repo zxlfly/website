@@ -41,7 +41,7 @@ module.exports = appInfo => {
     host: '127.0.0.1',
     port: '3306',
     user: 'root',//用户名
-    password: 'github941109',//用户密码
+    password: '********',//用户密码
     database: 'blog',//数据库名
     define: {
       underscored: true,
